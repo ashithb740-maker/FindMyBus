@@ -4,6 +4,10 @@ const dotenv = require('dotenv');
 const http = require('http');
 const path = require('path');
 const { Server } = require('socket.io');
+const connectDB = require('./config/db');
+const busRoutes = require('./routes/busRoutes');
+const routeRoutes = require('./routes/routeRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 dotenv.config();
 
@@ -23,13 +27,9 @@ app.get('/api/health', (req, res) => {
   res.json({ success: true, service: 'Find My Bus API', status: 'running' });
 });
 
-app.get('/api/buses', (req, res) => {
-  res.json({ success: true, data: [] });
-});
-
-app.get('/api/routes', (req, res) => {
-  res.json({ success: true, data: [] });
-});
+app.use('/api/auth', authRoutes);
+app.use('/api/buses', busRoutes);
+app.use('/api/routes', routeRoutes);
 
 io.on('connection', (socket) => {
   console.log(`Socket connected: ${socket.id}`);
@@ -54,6 +54,9 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
 });
 
-server.listen(PORT, () => {
-  console.log(`🚌 Find My Bus server running at http://localhost:${PORT}`);
-});
+(async () => {
+  await connectDB();
+  server.listen(PORT, () => {
+    console.log(`🚌 Find My Bus server running at http://localhost:${PORT}`);
+  });
+})();
