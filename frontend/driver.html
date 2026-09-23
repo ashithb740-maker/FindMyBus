@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find My Bus | Driver Tracking</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .driver-page{max-width:900px;margin:0 auto;padding:50px 6%}.driver-card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:30px;box-shadow:var(--shadow)}.driver-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.driver-card label{display:block;font-weight:700;font-size:.85rem;margin-bottom:7px}.driver-card input{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px}.driver-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.driver-actions button{border:0;border-radius:10px;padding:12px 18px;font-weight:750}.start{background:var(--green);color:#fff}.stop{background:#eef2f7;color:#33445c}.driver-status{margin-top:20px;padding:14px;border-radius:12px;background:#f5f9ff;color:#4d6380}.telemetry{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}.metric{border:1px solid var(--line);border-radius:13px;padding:15px}.metric small{display:block;color:var(--muted)}.metric strong{display:block;font-size:1.2rem;margin-top:3px}@media(max-width:650px){.driver-grid,.telemetry{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <header class="navbar"><a class="brand" href="/"><span class="brand-mark">🚌</span><span>Find My Bus</span></a><a class="login-btn" href="/">Passenger View</a></header>
+  <main class="driver-page">
+    <div class="driver-card">
+      <span class="mini-label">DRIVER PORTAL</span>
+      <h1 style="font-size:clamp(2rem,5vw,3.2rem);margin:10px 0">Start your bus trip</h1>
+      <p style="color:var(--muted)">Allow GPS access to share the driver's live location with passengers.</p>
+      <div class="driver-grid">
+        <div><label for="busId">Bus ID</label><input id="busId" placeholder="MongoDB bus ID"></div>
+        <div><label for="busNumber">Bus number</label><input id="busNumber" placeholder="Example: 12A"></div>
+      </div>
+      <div class="driver-actions"><button class="start" id="startBtn">▶ Start Live Tracking</button><button class="stop" id="stopBtn">■ Stop Tracking</button></div>
+      <div class="driver-status" id="driverStatus">Ready. Tracking has not started.</div>
+      <div class="telemetry"><div class="metric"><small>Latitude</small><strong id="lat">—</strong></div><div class="metric"><small>Longitude</small><strong id="lon">—</strong></div><div class="metric"><small>Speed</small><strong id="speed">—</strong></div></div>
+    </div>
+  </main>
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+  <script>
+    const socket = io(window.location.origin);
+    let watchId = null;
+    const status = document.getElementById('driverStatus');
+    const busId = document.getElementById('busId');
+    const busNumber = document.getElementById('busNumber');
+    const lat = document.getElementById('lat');
+    const lon = document.getElementById('lon');
+    const speed = document.getElementById('speed');
+
+    function sendPosition(position) {
+      const payload = { busId: busId.value.trim() || null, busNumber: busNumber.value.trim() || null, latitude: position.coords.latitude, longitude: position.coords.longitude, speed: position.coords.speed ? Number((position.coords.speed * 3.6).toFixed(1)) : 0 };
+      lat.textContent = payload.latitude.toFixed(6); lon.textContent = payload.longitude.toFixed(6); speed.textContent = `${payload.speed} km/h`;
+      socket.emit('driver:location', payload);
+      status.textContent = `Live tracking active • last update ${new Date().toLocaleTimeString()}`;
+    }
+
+    document.getElementById('startBtn').onclick = () => {
+      if (!navigator.geolocation) return (status.textContent = 'GPS is not supported by this browser.');
+      if (watchId !== null) return;
+      if (!busId.value.trim()) status.textContent = 'Tip: enter a Bus ID to persist the location in MongoDB.';
+      watchId = navigator.geolocation.watchPosition(sendPosition, (error) => { status.textContent = `GPS error: ${error.message}`; }, { enableHighAccuracy: true, maximumAge: 3000, timeout: 10000 });
+      if (busId.value.trim()) socket.emit('driver:status', { busId: busId.value.trim(), status: 'active' });
+    };
+
+    document.getElementById('stopBtn').onclick = () => {
+      if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+      watchId = null;
+      if (busId.value.trim()) socket.emit('driver:status', { busId: busId.value.trim(), status: 'inactive' });
+      status.textContent = 'Tracking stopped.';
+    };
+  </script>
+</body>
+</html>
