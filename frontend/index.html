@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Find My Bus - real-time public bus tracking and journey planning.">
+  <title>Find My Bus | Real-Time Bus Tracking</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="navbar">
+    <a class="brand" href="#home" aria-label="Find My Bus home">
+      <span class="brand-mark">🚌</span>
+      <span>Find My Bus</span>
+    </a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a class="active" href="#home">Home</a>
+      <a href="#tracking">Live Tracking</a>
+      <a href="#routes">Routes</a>
+      <a href="#planner">Journey Planner</a>
+      <a href="#features">Features</a>
+    </nav>
+    <button class="login-btn" type="button">Login</button>
+  </header>
+
+  <main>
+    <section id="home" class="hero">
+      <div class="hero-copy">
+        <span class="status-pill"><span class="status-dot"></span> Real-time public transport</span>
+        <h1>Find your bus.<br><span>Track your journey.</span></h1>
+        <p>Track buses in real time, discover routes and stops, check arrival information, and plan your journey from one simple platform.</p>
+
+        <form id="searchForm" class="search-box">
+          <span class="search-icon">⌕</span>
+          <input id="searchInput" type="search" placeholder="Search bus number, route or stop..." autocomplete="off">
+          <button type="submit">Search</button>
+        </form>
+
+        <div class="quick-actions">
+          <button type="button" data-action="tracking">📍 Live Buses</button>
+          <button type="button" data-action="planner">🧭 Plan Journey</button>
+          <button type="button" data-action="nearby">📌 Nearby Stops</button>
+        </div>
+        <p id="searchMessage" class="search-message" aria-live="polite"></p>
+      </div>
+
+      <div class="map-card" id="tracking">
+        <div class="map-topbar">
+          <div><strong>Live Bus Network</strong><small>Updated continuously when tracking is enabled</small></div>
+          <span class="live-label"><span class="status-dot"></span> LIVE</span>
+        </div>
+        <div class="map-preview" aria-label="Live map preview">
+          <div class="road road-one"></div>
+          <div class="road road-two"></div>
+          <div class="road road-three"></div>
+          <div class="water"></div>
+          <div class="map-label label-one">Central Bus Stand</div>
+          <div class="map-label label-two">City Centre</div>
+          <div class="map-label label-three">Railway Station</div>
+          <div class="bus-marker bus-one">🚌<span>12A</span></div>
+          <div class="bus-marker bus-two">🚌<span>24B</span></div>
+          <div class="bus-marker bus-three">🚌<span>K10</span></div>
+          <div class="map-center-pin">📍</div>
+          <div class="map-overlay-card"><strong>Live locations</strong><span>3 buses currently visible</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="features-section">
+      <div class="section-heading">
+        <span>EVERYTHING YOU NEED</span>
+        <h2>Travel smarter with Find My Bus</h2>
+        <p>A single platform for live bus information and everyday journey planning.</p>
+      </div>
+      <div class="feature-grid">
+        <article class="feature-card"><div class="feature-icon">📍</div><h3>Live Bus Tracking</h3><p>View active buses and their latest locations on an interactive map.</p></article>
+        <article class="feature-card"><div class="feature-icon">🗺️</div><h3>Routes & Stops</h3><p>Explore complete routes, stops, directions, and upcoming services.</p></article>
+        <article class="feature-card"><div class="feature-icon">⏱️</div><h3>Arrival Information</h3><p>Get useful ETA information to make waiting and transfers easier.</p></article>
+        <article class="feature-card"><div class="feature-icon">🧭</div><h3>Journey Planner</h3><p>Find suitable bus services between your source and destination.</p></article>
+      </div>
+    </section>
+
+    <section id="routes" class="info-section">
+      <div class="info-card"><span class="mini-label">ROUTES</span><h2>Find the right service for your trip.</h2><p>Search by bus number, route, source, destination, or stop. More route and timetable data will be connected as the backend is developed.</p><button class="outline-btn" data-action="routes">Explore routes →</button></div>
+      <div id="planner" class="info-card planner-card"><span class="mini-label">JOURNEY PLANNER</span><h2>Plan your journey with confidence.</h2><div class="planner-fields"><input id="fromInput" placeholder="From"><span>→</span><input id="toInput" placeholder="To"><button class="primary-btn" id="planBtn">Plan</button></div><p id="plannerMessage" class="search-message"></p></div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-brand">🚌 <strong>Find My Bus</strong></div>
+    <p>Real-Time Public Bus Tracking &amp; Journey Planning</p>
+    <p class="copyright">© 2026 Find My Bus. All rights reserved.</p>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
