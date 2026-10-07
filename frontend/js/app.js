@@ -69,9 +69,7 @@ async function loadBuses() {
 
 if (typeof io === 'function') {
   const socket = io(API_BASE, { transports: ['websocket', 'polling'] });
-  socket.on('connect', () => {
-    mapStatus.textContent = 'Live service connected';
-  });
+  socket.on('connect', () => { mapStatus.textContent = 'Live service connected'; });
   socket.on('bus:location', upsertBusMarker);
   socket.on('bus:status', (data) => {
     if (data.status === 'inactive') {
@@ -117,6 +115,30 @@ document.querySelectorAll('[data-action]').forEach((button) => {
   });
 });
 
+document.querySelectorAll('.search-tab').forEach((tab) => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.search-tab').forEach((item) => item.classList.remove('active'));
+    tab.classList.add('active');
+    const mode = tab.dataset.searchMode;
+    if (mode === 'bus') searchInput.placeholder = 'Enter bus number or route name...';
+    if (mode === 'route') searchInput.placeholder = 'Enter route, source or destination...';
+    if (mode === 'nearby') searchInput.placeholder = 'Enter your area or nearby stop...';
+    searchInput.focus();
+  });
+});
+
+document.querySelectorAll('.popular-chip').forEach((chip) => {
+  chip.addEventListener('click', () => {
+    searchInput.value = chip.dataset.searchValue || '';
+    searchForm.requestSubmit();
+  });
+});
+
+document.getElementById('navSearchBtn')?.addEventListener('click', () => {
+  searchInput.focus();
+  document.getElementById('home').scrollIntoView({ behavior: 'smooth' });
+});
+
 document.getElementById('planBtn').addEventListener('click', () => {
   const from = document.getElementById('fromInput').value.trim();
   const to = document.getElementById('toInput').value.trim();
@@ -139,10 +161,6 @@ document.getElementById('locateBtn').addEventListener('click', () => {
     },
     () => { mapStatus.textContent = 'Location permission was not granted'; }
   );
-});
-
-document.getElementById('loginBtn').addEventListener('click', () => {
-  window.location.href = '/login.html';
 });
 
 loadBuses();
