@@ -266,3 +266,33 @@ footer:before{content:"";position:absolute;width:250px;height:250px;right:-100px
  .route-result-card{padding:17px;border-radius:15px}
  .route-result-card h3{font-size:1rem}
 }
+
+
+/* Shared design system across every existing page */
+:root{--blue:var(--green);--blue-soft:var(--green-soft)}
+.page,.page-shell,.driver-page,.auth-wrap,.routes-page,.planner-page{padding-top:42px!important}
+button,a,input,select{ -webkit-tap-highlight-color:transparent}
+input:focus,select:focus,textarea:focus{outline:2px solid rgba(7,135,95,.16);outline-offset:1px;border-color:#81bda9!important}
+button:focus-visible,a:focus-visible{outline:3px solid rgba(7,135,95,.28);outline-offset:3px}
+.page-shell,.page,.driver-page{width:100%;max-width:1250px;margin-inline:auto}
+.topbar{width:100%;max-width:1250px;margin:0 auto;padding:14px 5%;display:flex;justify-content:space-between;align-items:center;gap:14px}
+.topbar .brand{display:flex;align-items:center;gap:10px;color:var(--ink)}
+.topbar .brand strong{font-size:1.15rem}
+.topbar .back,.backlink{color:var(--green)}
+.auth-submit,.toolbar button,.find,.route-search button{background:var(--green)!important}
+.auth-submit:hover,.toolbar button:hover,.find:hover,.route-search button:hover{background:var(--green-dark)!important}
+.mobile-bottom-nav{display:none}
+@media(max-width:760px){
+  body{padding-bottom:68px}
+  .page,.page-shell,.driver-page,.auth-wrap{padding:28px 4% 42px!important}
+  .topbar{padding:12px 4%;gap:10px}
+  .topbar .brand{min-width:0;font-size:1.05rem}
+  .topbar .brand strong{font-size:1rem}
+  .page h1,.page-shell h1,.driver-page h1{font-size:clamp(1.9rem,8vw,2.5rem)!important;line-height:1.1}
+  .panel,.driver-card,.auth-card,.favorite-card,.notice{border-radius:17px}
+  .auth-wrap{min-height:calc(100svh - 70px);align-items:start;padding-top:35px!important}
+  .auth-card{padding:24px 20px}
+  .mobile-bottom-nav{display:grid;position:fixed;z-index:1100;left:0;right:0;bottom:0;grid-template-columns:repeat(4,1fr);height:64px;padding:5px 8px max(5px,env(safe-area-inset-bottom));background:rgba(255,255,255,.97);border-top:1px solid #e6ece8;box-shadow:0 -8px 24px rgba(17,40,30,.07);backdrop-filter:blur(14px)}
+  .mobile-bottom-nav a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;color:#65736e;font-size:.68rem;font-weight:700}
+  .mobile-bottom-nav a span{font-size:1.25rem;line-height:1.2;color:var(--green)}
+}
