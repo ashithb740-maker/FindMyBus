@@ -53,6 +53,7 @@
       <div class="popular-row" id="popularRoutes"><span>Routes:</span><span class="route-loading">Loading routes…</span></div>
     </div>
     <p id="searchMessage" class="search-message" aria-live="polite"></p>
+    <div id="searchResults" class="search-results" aria-live="polite"></div>
   </div>
 
   <div class="hero-photo">
@@ -61,6 +62,8 @@
     <div class="bus-stop-badge"><span class="pin-dot"></span><strong>Live bus information</strong><small>Track your next journey</small></div>
   </div>
 </section>
+
+<section id="routeResultsSection" class="route-results-section" hidden><div class="section-heading left"><span>YOUR SEARCH</span><h2>Matching routes</h2><p>Routes and stops configured by the administrator.</p></div><div id="routeResultsGrid" class="route-results-grid"></div></section>
 
 <section class="feature-strip" aria-label="Find My Bus features">
   <article class="feature-card feature-blue"><div class="feature-icon">⌖</div><h3>Live Tracking</h3><p>See real-time bus locations on the map.</p></article>
