@@ -242,3 +242,27 @@ footer:before{content:"";position:absolute;width:250px;height:250px;right:-100px
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
 }
+
+
+/* Database-backed route cards */
+.route-results-section{max-width:1320px;margin:0 auto;padding:58px 5% 64px}
+.route-results-section[hidden]{display:none}
+.route-results-section .section-heading{margin-bottom:22px}
+.route-results-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.route-result-card{min-width:0;padding:20px;background:#fff;border:1px solid #e1e9e5;border-radius:18px;box-shadow:0 10px 28px rgba(22,48,38,.055);transition:transform .2s ease,box-shadow .2s ease}
+.route-result-card:hover{transform:translateY(-3px);box-shadow:0 17px 36px rgba(22,48,38,.1)}
+.route-result-top,.route-result-meta{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.route-number{display:inline-flex;align-items:center;justify-content:center;min-width:42px;padding:5px 10px;border-radius:9px;background:#e8f7f0;color:#087553;font-weight:850}
+.route-stop-count{font-size:.75rem;color:#69766f}
+.route-result-card h3{margin:14px 0 7px;font-size:1.05rem;letter-spacing:-.02em}
+.route-result-card p{color:#68756e;font-size:.84rem;line-height:1.55;overflow-wrap:anywhere}
+.route-result-meta{justify-content:flex-start;flex-wrap:wrap;margin:15px 0;color:#4f665b;font-size:.78rem}
+.route-result-card>a{display:inline-block;margin-top:4px;color:var(--green);font-size:.86rem;font-weight:800}
+.route-empty{grid-column:1/-1;background:#fff;border:1px solid var(--line);padding:20px;border-radius:14px;color:var(--muted)}
+@media(max-width:900px){.route-results-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){
+ .route-results-section{padding:38px 4% 44px}
+ .route-results-grid{grid-template-columns:1fr;gap:11px}
+ .route-result-card{padding:17px;border-radius:15px}
+ .route-result-card h3{font-size:1rem}
+}
