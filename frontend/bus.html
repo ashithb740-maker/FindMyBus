@@ -4,7 +4,7 @@ const app=document.getElementById('app');
 let map,busMarker,routeLine,roadLine,socket,currentBus;
 const stopMarkers=[];
 const busEmojiIcon=L.divIcon({className:'bus-marker-emoji',html:'<div style="font-size:30px;filter:drop-shadow(0 2px 3px #0005)">🚌</div>',iconSize:[38,38],iconAnchor:[19,19]});
-function stopIcon(kind,index){const styles={start:'background:#087a55;color:white;border:3px solid white',end:'background:#0d8fd8;color:white;border:3px solid white',middle:'background:#ffe08a;color:#3b321b;border:3px solid white'};return L.divIcon({className:'route-stop-marker',html:'<div style="width:27px;height:27px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:900;box-shadow:0 1px 6px #0005;${styles[kind]}">'+(index+1)+'</div>',iconSize:[27,27],iconAnchor:[13,13]})}
+function stopIcon(kind,index){const styles={start:'background:#087a55;color:white;border:3px solid white',end:'background:#0d8fd8;color:white;border:3px solid white',middle:'background:#ffe08a;color:#3b321b;border:3px solid white'};return L.divIcon({className:'route-stop-marker',html:`<div style="width:27px;height:27px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:900;box-shadow:0 1px 6px #0005;${styles[kind]}">${index+1}</div>`,iconSize:[27,27],iconAnchor:[13,13]})}
 function validPoint(s){const lat=Number(s.latitude),lng=Number(s.longitude);return Number.isFinite(lat)&&Number.isFinite(lng)&&Math.abs(lat)<=90&&Math.abs(lng)<=180&&(lat!==0||lng!==0)}
 function routeStops(route){return (Array.isArray(route?.stops)?route.stops.slice().sort((a,b)=>(Number(a.sequence)||0)-(Number(b.sequence)||0)):[]).filter(validPoint)}
 function setTrackingStatus(text){const el=document.getElementById('trackingStatus');if(el)el.textContent=text}
