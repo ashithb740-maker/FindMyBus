@@ -177,31 +177,12 @@ document.getElementById('navSearchBtn')?.addEventListener('click', () => {
   searchInput.focus();
   document.getElementById('home')?.scrollIntoView({behavior:'smooth'});
 });
-document.getElementById('planBtn')?.addEventListener('click', async () => {
+document.getElementById('planBtn')?.addEventListener('click', () => {
   const from = document.getElementById('fromInput').value.trim();
   const to = document.getElementById('toInput').value.trim();
   if (!from || !to) { plannerMessage.textContent = 'Enter both your starting point and destination.'; return; }
-  plannerMessage.textContent = 'Finding configured routes from ' + from + ' to ' + to + '…';
-  try {
-    const response = await fetch(API_BASE + '/api/routes');
-    const result = await response.json();
-    if (!response.ok || !result.success) throw new Error('Route API unavailable');
-    const matching = (result.data || []).filter(route => {
-      const stops = routeStops(route).map(s => s.toLowerCase());
-      const a = stops.findIndex(s => s.includes(from.toLowerCase()));
-      const b = stops.findIndex(s => s.includes(to.toLowerCase()));
-      return a >= 0 && b > a;
-    });
-    if (!matching.length) {
-      plannerMessage.textContent = 'No direct configured route found for these stops yet.';
-      return;
-    }
-    plannerMessage.textContent = 'Matching route' + (matching.length > 1 ? 's' : '') + ': ' + matching.map(r => (r.routeNumber || r.name) + ' (' + r.source + ' → ' + r.destination + ')').join(' • ');
-    renderRouteResults(matching);
-    routeResultsSection?.scrollIntoView({behavior:'smooth',block:'start'});
-  } catch (error) {
-    plannerMessage.textContent = 'Journey planning needs the route service to be available.';
-  }
+  // Use the full journey planner so it can match route direction and list admin-assigned buses.
+  window.location.href = 'journey.html?from=' + encodeURIComponent(from) + '&to=' + encodeURIComponent(to);
 });
 document.getElementById('locateBtn')?.addEventListener('click', () => {
   if (!navigator.geolocation) { mapStatus.textContent = 'Location is not supported by this browser'; return; }
