@@ -50,7 +50,7 @@
         <input id="searchInput" type="search" placeholder="Enter bus number or route name..." autocomplete="off" aria-label="Search bus or route">
         <button type="submit">Search <span>→</span></button>
       </form>
-      <div class="popular-row"><span>Popular Buses:</span><button type="button" class="popular-chip" data-search-value="101">101</button><button type="button" class="popular-chip" data-search-value="102">102</button><button type="button" class="popular-chip" data-search-value="201">201</button><button type="button" class="popular-chip" data-search-value="202">202</button><button type="button" class="popular-chip" data-search-value="301">301</button></div>
+      <div class="popular-row" id="popularRoutes"><span>Routes:</span><span class="route-loading">Loading routes…</span></div>
     </div>
     <p id="searchMessage" class="search-message" aria-live="polite"></p>
   </div>
@@ -98,6 +98,8 @@
   </div>
 </section>
 </main>
+
+<nav class="mobile-bottom-nav" aria-label="Quick navigation"><a href="#home"><span>⌂</span>Home</a><a href="routes.html"><span>⌁</span>Routes</a><a href="#tracking"><span>◎</span>Live Map</a><a href="#planner"><span>↗</span>Plan</a></nav>
 
 <footer id="contact">
   <div class="footer-brand"><span class="footer-bus">🚌</span><strong>Find My Bus</strong></div>
