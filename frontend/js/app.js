@@ -107,14 +107,43 @@ async function loadRoutes() {
 }
 async function searchRoutes(query) {
   const value = String(query || '').trim();
+  if (searchMode === 'nearby') {
+    window.location.href = 'nearby.html';
+    return;
+  }
   if (!value) {
-    searchMessage.textContent = searchMode === 'nearby' ? 'Enter a stop or area name to search.' : 'Enter a bus number, route, or stop to search.';
+    searchMessage.textContent = 'Enter a bus number, route name, or stop to search.';
     searchInput.focus();
     return;
   }
-  searchMessage.textContent = 'Searching routes and stops…';
+  searchMessage.textContent = 'Searching…';
   if (searchResults) searchResults.innerHTML = '';
+  if (routeResultsSection) routeResultsSection.hidden = true;
   try {
+    if (searchMode === 'bus') {
+      const response = await fetch(API_BASE + '/api/buses');
+      const result = await response.json();
+      if (!response.ok || !result.success) throw new Error(result.message || 'Could not load buses');
+      const buses = (result.data || []).filter(bus => {
+        const route = bus.routeId || {};
+        const haystack = [bus.busNumber, bus.status, route.routeNumber, route.name, route.source, route.destination]
+          .filter(Boolean).join(' ').toLowerCase();
+        return haystack.includes(value.toLowerCase());
+      });
+      if (!buses.length) {
+        searchMessage.textContent = 'No registered bus matches “' + value + '”.';
+        if (searchResults) searchResults.innerHTML = '<div class="route-empty">Bus records appear here after the administrator registers buses. Try searching by a route or stop instead.</div>';
+        return;
+      }
+      searchMessage.textContent = buses.length + ' matching bus' + (buses.length === 1 ? '' : 'es') + ' found.';
+      if (searchResults) searchResults.innerHTML = buses.map(bus => {
+        const route = bus.routeId || {};
+        const position = bus.location || {};
+        return '<article class="route-result-card"><div class="route-result-top"><span class="route-number">' + escapeHTML(bus.busNumber || 'Bus') + '</span><span class="route-stop-count">' + escapeHTML(bus.status || 'inactive') + '</span></div><h3>' + escapeHTML(route.name || 'Route not assigned') + '</h3><p>' + escapeHTML((route.source || 'Start not set') + ' → ' + (route.destination || 'Destination not set')) + '</p><div class="route-result-meta"><span>GPS: ' + (Number.isFinite(Number(position.latitude)) && Number.isFinite(Number(position.longitude)) ? 'Location available' : 'Waiting for GPS') + '</span></div><a href="bus.html?id=' + encodeURIComponent(bus._id) + '">Track this bus →</a></article>';
+      }).join('');
+      searchResults.scrollIntoView({behavior:'smooth',block:'center'});
+      return;
+    }
     const response = await fetch(API_BASE + '/api/routes?search=' + encodeURIComponent(value));
     const result = await response.json();
     if (!response.ok || !result.success) throw new Error(result.message || 'Search failed');
@@ -123,14 +152,7 @@ async function searchRoutes(query) {
     renderRouteResults(matches);
     routeResultsSection?.scrollIntoView({behavior:'smooth',block:'start'});
   } catch (error) {
-    const localMatches = routesCache.filter(r => (r.routeNumber + ' ' + r.name + ' ' + routeDescription(r)).toLowerCase().includes(value.toLowerCase()));
-    if (localMatches.length) {
-      searchMessage.textContent = 'Showing routes already loaded in this session.';
-      renderRouteResults(localMatches);
-      routeResultsSection?.scrollIntoView({behavior:'smooth',block:'start'});
-    } else {
-      searchMessage.textContent = 'Search service is unavailable. Please check the backend connection.';
-    }
+    searchMessage.textContent = 'Search service is unavailable. Please check the backend connection.';
   }
 }
 if (typeof io === 'function') {
